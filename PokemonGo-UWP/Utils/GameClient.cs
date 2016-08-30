@@ -390,6 +390,7 @@ namespace PokemonGo_UWP.Utils
                 if (e is PokemonGo.RocketAPI.Exceptions.AccessTokenExpiredException)
                 {
                     Debug.WriteLine("AccessTokenExpired Exception caught");
+                    _client.AccessToken.Expire();
                     await _client.Login.DoLogin();
                 }
                 else
@@ -705,7 +706,7 @@ namespace PokemonGo_UWP.Utils
         /// <summary>
         ///     List of items that can be used when trying to catch a Pokemon
         /// </summary>
-        private static readonly List<ItemId> CatchItemIds = new List<ItemId>
+        public static readonly List<ItemId> CatchItemIds = new List<ItemId>
         {
             ItemId.ItemPokeBall,
             ItemId.ItemGreatBall,
@@ -716,6 +717,24 @@ namespace PokemonGo_UWP.Utils
             ItemId.ItemRazzBerry,
             ItemId.ItemUltraBall,
             ItemId.ItemWeparBerry
+        };
+
+        /// <summary>
+        /// List of items, that can be used from the normal ItemsInventoryPage
+        /// </summary>
+        public static readonly List<ItemId> NormalUseItemIds = new List<ItemId>
+        {
+            ItemId.ItemPotion,
+            ItemId.ItemSuperPotion,
+            ItemId.ItemHyperPotion,
+            ItemId.ItemMaxPotion,
+            ItemId.ItemRevive,
+            ItemId.ItemMaxRevive,
+            ItemId.ItemLuckyEgg,
+            ItemId.ItemIncenseOrdinary,
+            ItemId.ItemIncenseSpicy,
+            ItemId.ItemIncenseCool,
+            ItemId.ItemIncenseFloral,
         };
 
         /// <summary>
@@ -980,6 +999,11 @@ namespace PokemonGo_UWP.Utils
             return await _client.Inventory.SetFavoritePokemon(pokeId, isFavorite);
         }
 
+        public static async Task<NicknamePokemonResponse> SetPokemonNickName(ulong pokemonId, string nickName)
+        {
+            return await _client.Inventory.NicknamePokemon(pokemonId, nickName);
+        }
+
         #endregion
 
         #endregion
@@ -1031,6 +1055,21 @@ namespace PokemonGo_UWP.Utils
         /// FortRecallPokemon
         /// StartGymBattle
         /// AttackGym
+
+        #endregion
+
+        #region Items Handling
+
+        /// <summary>
+        ///     Recycles the given amount of the selected item
+        /// </summary>
+        /// <param name="item"></param>
+        /// <param name="amount"></param>
+        /// <returns></returns>
+        public static async Task<RecycleInventoryItemResponse> RecycleItem(ItemId item, int amount)
+        {
+            return await _client.Inventory.RecycleItem(item, amount);
+        }
 
         #endregion
 
